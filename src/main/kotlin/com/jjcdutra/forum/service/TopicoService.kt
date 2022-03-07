@@ -6,9 +6,11 @@ import com.jjcdutra.forum.model.Usuario
 import org.springframework.stereotype.Service
 
 @Service
-class TopicoService {
+class TopicoService(
+    var topicos: List<Topico>
+) {
 
-    fun listar(): List<Topico> {
+    init {
         val topico = Topico(
             id = 1,
             titulo = "Duvida Kotlin",
@@ -16,6 +18,31 @@ class TopicoService {
             curso = Curso(id = 1, nome = "Kotlin", categoria = "Programacao"),
             autor = Usuario(id = 1, nome = "Ana da Silva", email = "ana@email.com")
         )
-        return listOf(topico, topico, topico)
+
+        val topico2 = Topico(
+            id = 2,
+            titulo = "Duvida Kotlin 2",
+            mensagem = "Variaveis no Kotlin 2",
+            curso = Curso(id = 1, nome = "Kotlin", categoria = "Programacao"),
+            autor = Usuario(id = 1, nome = "Ana da Silva", email = "ana@email.com")
+        )
+
+        val topico3 = Topico(
+            id = 3,
+            titulo = "Duvida Kotlin 3",
+            mensagem = "Variaveis no Kotlin 3",
+            curso = Curso(id = 1, nome = "Kotlin", categoria = "Programacao"),
+            autor = Usuario(id = 1, nome = "Ana da Silva", email = "ana@email.com")
+        )
+
+        topicos = listOf(topico, topico2, topico3)
+    }
+
+    fun listar(): List<Topico> {
+        return topicos
+    }
+
+    fun buscarPorId(id: Long): Topico {
+        return topicos.first { it.id == id }
     }
 }
