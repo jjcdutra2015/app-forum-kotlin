@@ -1,5 +1,6 @@
 package com.jjcdutra.forum.controller
 
+import com.jjcdutra.forum.dto.NovoTopicoDto
 import com.jjcdutra.forum.model.Topico
 import com.jjcdutra.forum.service.TopicoService
 import org.springframework.web.bind.annotation.*
@@ -21,7 +22,7 @@ class TopicoController(
     }
 
     @PostMapping
-    fun cadastrar(@RequestBody topico: Topico) {
-        service.cadastrar(topico)
+    fun cadastrar(@RequestBody dto: NovoTopicoDto) {
+        service.cadastrar(dto)
     }
 }
