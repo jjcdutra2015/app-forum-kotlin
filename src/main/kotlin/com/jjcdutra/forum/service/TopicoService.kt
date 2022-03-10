@@ -2,48 +2,30 @@ package com.jjcdutra.forum.service
 
 import com.jjcdutra.forum.dto.NovoTopicoForm
 import com.jjcdutra.forum.dto.TopicoView
+import com.jjcdutra.forum.mapper.TopicoFormMapper
+import com.jjcdutra.forum.mapper.TopicoViewMapper
 import com.jjcdutra.forum.model.Topico
 import org.springframework.stereotype.Service
 
 @Service
 class TopicoService(
     var topicos: List<Topico> = ArrayList(),
-    val cursoService: CursoService,
-    val autorService: UsuarioService
+    val topicoViewMapper: TopicoViewMapper,
+    val topicoFormMapper: TopicoFormMapper
 ) {
 
     fun listar(): List<TopicoView> {
-        return topicos.map {
-            TopicoView(
-                id = it.id,
-                titulo = it.titulo,
-                mensagem = it.mensagem,
-                status = it.status,
-                dataCriacao = it.dataCriacao
-            )
-        }
+        return topicos.map { topicoViewMapper.map(it) }
     }
 
     fun buscarPorId(id: Long): TopicoView {
         val topico = topicos.first { it.id == id }
-        return TopicoView(
-            id = topico.id,
-            titulo = topico.titulo,
-            mensagem = topico.mensagem,
-            status = topico.status,
-            dataCriacao = topico.dataCriacao
-        )
+        return topicoViewMapper.map(topico)
     }
 
-    fun cadastrar(dto: NovoTopicoForm) {
-        topicos = topicos.plus(
-            Topico(
-                id = topicos.size.toLong() + 1,
-                titulo = dto.titulo,
-                mensagem = dto.mensagem,
-                curso = cursoService.buscarPorId(dto.idCurso),
-                autor = autorService.buscarPorId(dto.idAutor)
-            )
-        )
+    fun cadastrar(form: NovoTopicoForm) {
+        val topico = topicoFormMapper.map(form)
+        topico.id = topicos.size.toLong() + 1
+        topicos = topicos.plus(topico)
     }
 }
