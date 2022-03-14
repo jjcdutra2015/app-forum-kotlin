@@ -3,6 +3,7 @@ package com.jjcdutra.forum.service
 import com.jjcdutra.forum.dto.AtualizacaoTopicoForm
 import com.jjcdutra.forum.dto.NovoTopicoForm
 import com.jjcdutra.forum.dto.TopicoView
+import com.jjcdutra.forum.exception.NotFoundException
 import com.jjcdutra.forum.mapper.TopicoFormMapper
 import com.jjcdutra.forum.mapper.TopicoViewMapper
 import com.jjcdutra.forum.model.Topico
@@ -12,15 +13,16 @@ import org.springframework.stereotype.Service
 class TopicoService(
     var topicos: MutableList<Topico> = mutableListOf(),
     val topicoViewMapper: TopicoViewMapper,
-    val topicoFormMapper: TopicoFormMapper
+    val topicoFormMapper: TopicoFormMapper,
 ) {
+    private val notFoundMessage = "Tópico não encontrado!"
 
     fun listar(): List<TopicoView> {
         return topicos.map { topicoViewMapper.map(it) }
     }
 
     fun buscarPorId(id: Long): TopicoView {
-        val topico = topicos.first { it.id == id }
+        val topico = topicos.firstOrNull { it.id == id } ?: throw NotFoundException(notFoundMessage)
         return topicoViewMapper.map(topico)
     }
 
@@ -32,7 +34,7 @@ class TopicoService(
     }
 
     fun atualizar(form: AtualizacaoTopicoForm): TopicoView {
-        val topico = topicos.first { it.id == form.id }
+        val topico = topicos.firstOrNull { it.id == form.id } ?: throw NotFoundException(notFoundMessage)
         topicos.remove(topico)
         val topicoAtualizado = Topico(
             id = form.id,
@@ -51,7 +53,7 @@ class TopicoService(
     }
 
     fun deletar(id: Long) {
-        val topico = topicos.first { it.id == id }
+        val topico = topicos.firstOrNull { it.id == id } ?: throw NotFoundException(notFoundMessage)
         topicos.remove(topico)
     }
 }
