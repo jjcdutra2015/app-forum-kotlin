@@ -1,24 +1,15 @@
 package com.jjcdutra.forum.service
 
 import com.jjcdutra.forum.model.Curso
+import com.jjcdutra.forum.repository.CursoRepository
 import org.springframework.stereotype.Service
 
 @Service
 class CursoService(
-    private var cursos: List<Curso>
+    private val repository: CursoRepository
 ) {
 
-    init {
-        val curso = Curso(
-            id = 1,
-            nome = "Kotlin",
-            categoria = "Programação"
-        )
-
-        cursos = listOf(curso)
-    }
-
     fun buscarPorId(id: Long): Curso {
-        return cursos.first { it.id == id }
+        return repository.getById(id)
     }
 }

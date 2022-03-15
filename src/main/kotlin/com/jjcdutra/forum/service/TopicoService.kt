@@ -6,54 +6,42 @@ import com.jjcdutra.forum.dto.TopicoView
 import com.jjcdutra.forum.exception.NotFoundException
 import com.jjcdutra.forum.mapper.TopicoFormMapper
 import com.jjcdutra.forum.mapper.TopicoViewMapper
-import com.jjcdutra.forum.model.Topico
+import com.jjcdutra.forum.repository.TopicoRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class TopicoService(
-    var topicos: MutableList<Topico> = mutableListOf(),
+    private val repository: TopicoRepository,
     val topicoViewMapper: TopicoViewMapper,
     val topicoFormMapper: TopicoFormMapper,
 ) {
     private val notFoundMessage = "Tópico não encontrado!"
 
     fun listar(): List<TopicoView> {
-        return topicos.map { topicoViewMapper.map(it) }
+        return repository.findAll().map { topicoViewMapper.map(it) }
     }
 
     fun buscarPorId(id: Long): TopicoView {
-        val topico = topicos.firstOrNull { it.id == id } ?: throw NotFoundException(notFoundMessage)
+        val topico = repository.findByIdOrNull(id) ?: throw NotFoundException(notFoundMessage)
         return topicoViewMapper.map(topico)
     }
 
     fun cadastrar(form: NovoTopicoForm): TopicoView {
         val topico = topicoFormMapper.map(form)
-        topico.id = topicos.size.toLong() + 1
-        topicos.add(topico)
+        repository.save(topico)
         return topicoViewMapper.map(topico)
     }
 
     fun atualizar(form: AtualizacaoTopicoForm): TopicoView {
-        val topico = topicos.firstOrNull { it.id == form.id } ?: throw NotFoundException(notFoundMessage)
-        topicos.remove(topico)
-        val topicoAtualizado = Topico(
-            id = form.id,
-            titulo = form.titulo,
-            mensagem = form.mensagem,
-            dataCriacao = topico.dataCriacao,
-            curso = topico.curso,
-            autor = topico.autor,
-            status = topico.status,
-            respostas = topico.respostas
-        )
-        topicos.add(
-            topicoAtualizado
-        )
-        return topicoViewMapper.map(topicoAtualizado)
+        val topico = repository.findByIdOrNull(form.id) ?: throw NotFoundException(notFoundMessage)
+        topico.titulo = form.titulo
+        topico.mensagem = form.mensagem
+        repository.save(topico)
+        return topicoViewMapper.map(topico)
     }
 
     fun deletar(id: Long) {
-        val topico = topicos.firstOrNull { it.id == id } ?: throw NotFoundException(notFoundMessage)
-        topicos.remove(topico)
+        repository.deleteById(id)
     }
 }
