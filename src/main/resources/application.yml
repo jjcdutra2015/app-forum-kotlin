@@ -10,4 +10,4 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true localizar tabelas ao usar data.sql versão superior 2.5 do spring boot
