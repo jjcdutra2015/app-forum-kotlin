@@ -4,6 +4,9 @@ import com.jjcdutra.forum.dto.AtualizacaoTopicoForm
 import com.jjcdutra.forum.dto.NovoTopicoForm
 import com.jjcdutra.forum.dto.TopicoView
 import com.jjcdutra.forum.service.TopicoService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -18,8 +21,11 @@ class TopicoController(
 ) {
 
     @GetMapping
-    fun listar(@RequestParam nomeCurso: String?): List<TopicoView> {
-        return service.listar(nomeCurso)
+    fun listar(
+        @RequestParam nomeCurso: String?,
+        @PageableDefault(size = 5) paginacao: Pageable
+    ): Page<TopicoView> {
+        return service.listar(nomeCurso, paginacao)
     }
 
     @GetMapping("/{id}")
