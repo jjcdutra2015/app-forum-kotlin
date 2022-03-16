@@ -4,6 +4,7 @@ import com.jjcdutra.forum.dto.AtualizacaoTopicoForm
 import com.jjcdutra.forum.dto.NovoTopicoForm
 import com.jjcdutra.forum.dto.TopicoView
 import com.jjcdutra.forum.service.TopicoService
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -38,6 +39,7 @@ class TopicoController(
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun cadastrar(
         @RequestBody @Valid form: NovoTopicoForm,
         uriBuilder: UriComponentsBuilder
@@ -49,6 +51,7 @@ class TopicoController(
 
     @PutMapping
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm): ResponseEntity<TopicoView> {
         val topicoView = service.atualizar(form)
         return ResponseEntity.ok(topicoView)
@@ -57,6 +60,7 @@ class TopicoController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["topicos"], allEntries = true)
     fun deletar(@PathVariable id: Long) {
         service.deletar(id)
     }
