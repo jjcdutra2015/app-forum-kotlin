@@ -2,6 +2,7 @@ package com.jjcdutra.forum.controller
 
 import com.jjcdutra.forum.dto.AtualizacaoTopicoForm
 import com.jjcdutra.forum.dto.NovoTopicoForm
+import com.jjcdutra.forum.dto.TopicoPorCategoriaDto
 import com.jjcdutra.forum.dto.TopicoView
 import com.jjcdutra.forum.service.TopicoService
 import org.springframework.cache.annotation.CacheEvict
@@ -63,5 +64,10 @@ class TopicoController(
     @CacheEvict(value = ["topicos"], allEntries = true)
     fun deletar(@PathVariable id: Long) {
         service.deletar(id)
+    }
+
+    @GetMapping("/relatorio")
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return service.relatorio()
     }
 }

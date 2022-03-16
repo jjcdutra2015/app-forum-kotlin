@@ -2,6 +2,7 @@ package com.jjcdutra.forum.service
 
 import com.jjcdutra.forum.dto.AtualizacaoTopicoForm
 import com.jjcdutra.forum.dto.NovoTopicoForm
+import com.jjcdutra.forum.dto.TopicoPorCategoriaDto
 import com.jjcdutra.forum.dto.TopicoView
 import com.jjcdutra.forum.exception.NotFoundException
 import com.jjcdutra.forum.mapper.TopicoFormMapper
@@ -53,5 +54,9 @@ class TopicoService(
 
     fun deletar(id: Long) {
         repository.deleteById(id)
+    }
+
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return repository.relatorio()
     }
 }
