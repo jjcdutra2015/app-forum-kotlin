@@ -4,6 +4,7 @@ import com.jjcdutra.forum.security.JWTAuthenticationFilter
 import com.jjcdutra.forum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -23,15 +24,17 @@ class SecurityConfguration(
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
-        http?.authorizeRequests()?.
+        http?.
+        csrf()?.disable()?.
+        authorizeRequests()?.
 //        antMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")?.
-        antMatchers("/login")?.permitAll()?.
+        antMatchers(HttpMethod.POST,"/login")?.permitAll()?.
         anyRequest()?.authenticated()?.
         and()
-        http?.addFilterBefore(
-            JWTLoginFilter(authMananger = authenticationManager(), jwtUtil = jwtUtil),
-                            UsernamePasswordAuthenticationFilter()::class.java)
-        http?.addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), OncePerRequestFilter::class.java)
+        http?.addFilterBefore(JWTLoginFilter(authMananger = authenticationManager(), jwtUtil = jwtUtil),
+            UsernamePasswordAuthenticationFilter()::class.java)
+        http?.addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil),
+            UsernamePasswordAuthenticationFilter()::class.java)
         http?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
