@@ -1,5 +1,6 @@
 package com.jjcdutra.forum.config
 
+import com.jjcdutra.forum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfguration(
-    private val userDetailsService: UserDetailsService
+    private val userDetailsService: UserDetailsService,
     private val jwtUtil: JWTUtil
 ) : WebSecurityConfigurerAdapter() {
 
