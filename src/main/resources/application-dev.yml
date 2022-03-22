@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:forum
+    username: sa
+    password:
+  jpa:
+    database-plataform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+#    defer-datasource-initialization: true localizar tabelas ao usar data.sql versão superior 2.5 do spring boot
+jwt:
+  secret: secreto
