@@ -1,1 +1,12 @@
 mvn spring-boot:run -Dspring-boot.run.profiles=prod
+
+#Criar jar
+mvn package
+
+#Criar imagem docker
+docker build -t forum -f Dockerfile .
+
+#Rodar imagem docker
+docker run -p 3080:8080 forum
+
+//Caso realize alguma alteração no código realizar os passos acima
